@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mega Man X Password Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .tiles-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .mavericks-grid {
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+
+        .heart-tanks-grid {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+
+        .sub-tanks-grid {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+
+        .upgrades-grid {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+
+        .tile {
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .tile:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tile.selected {
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .tile img {
+            max-width: 60px;
+            max-height: 60px;
+            margin-bottom: 8px;
+            display: none;
+        }
+
+        .tile-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        hr {
+            border: none;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin: 40px 0;
+        }
+
+        .password-section {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .password-title {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            margin-bottom: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .password-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .password-digit {
+            font-family: 'Courier New', monospace;
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .password-grid {
+                gap: 8px;
+            }
+
+            .tile {
+                min-height: 60px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Mega Man X Password Generator 🎮</h1>
+
+        <!-- Mavericks Section -->
+        <div class="section">
+            <h2 class="section-title">Mavericks Defeated</h2>
+            <div class="tiles-grid mavericks-grid">
+                <div class="tile" data-flag="chillPenguin">
+                    <img src="chill-penguin.png" alt="Chill Penguin" onerror="this.style.display='none'">
+                    <div class="tile-label">Chill Penguin</div>
+                </div>
+                <div class="tile" data-flag="stormEagle">
+                    <img src="storm-eagle.png" alt="Storm Eagle" onerror="this.style.display='none'">
+                    <div class="tile-label">Storm Eagle</div>
+                </div>
+                <div class="tile" data-flag="flameMammoth">
+                    <img src="flame-mammoth.png" alt="Flame Mammoth" onerror="this.style.display='none'">
+                    <div class="tile-label">Flame Mammoth</div>
+                </div>
+                <div class="tile" data-flag="sparkMandrill">
+                    <img src="spark-mandrill.png" alt="Spark Mandrill" onerror="this.style.display='none'">
+                    <div class="tile-label">Spark Mandrill</div>
+                </div>
+                <div class="tile" data-flag="armoredArmadillo">
+                    <img src="armored-armadillo.png" alt="Armored Armadillo" onerror="this.style.display='none'">
+                    <div class="tile-label">Armored Armadillo</div>
+                </div>
+                <div class="tile" data-flag="launchOctopus">
+                    <img src="launch-octopus.png" alt="Launch Octopus" onerror="this.style.display='none'">
+                    <div class="tile-label">Launch Octopus</div>
+                </div>
+                <div class="tile" data-flag="boomerKuwanger">
+                    <img src="boomer-kuwanger.png" alt="Boomer Kuwanger" onerror="this.style.display='none'">
+                    <div class="tile-label">Boomer Kuwanger</div>
+                </div>
+                <div class="tile" data-flag="stingChameleon">
+                    <img src="sting-chameleon.png" alt="Sting Chameleon" onerror="this.style.display='none'">
+                    <div class="tile-label">Sting Chameleon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Heart Tanks Section -->
+        <div class="section">
+            <h2 class="section-title">Heart Tanks Collected</h2>
+            <div class="tiles-grid heart-tanks-grid">
+                <div class="tile" data-flag="htChillPenguin">
+                    <img src="heart-tank-01.png" alt="Heart Tank - Chill Penguin" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Chill Penguin</div>
+                </div>
+                <div class="tile" data-flag="htStormEagle">
+                    <img src="heart-tank-02.png" alt="Heart Tank - Storm Eagle" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Storm Eagle</div>
+                </div>
+                <div class="tile" data-flag="htFlameMammoth">
+                    <img src="heart-tank-03.png" alt="Heart Tank - Flame Mammoth" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Flame Mammoth</div>
+                </div>
+                <div class="tile" data-flag="htSparkMandrill">
+                    <img src="heart-tank-04.png" alt="Heart Tank - Spark Mandrill" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Spark Mandrill</div>
+                </div>
+                <div class="tile" data-flag="htArmoredArmadillo">
+                    <img src="heart-tank-05.png" alt="Heart Tank - Armored Armadillo" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Armored Armadillo</div>
+                </div>
+                <div class="tile" data-flag="htLaunchOctopus">
+                    <img src="heart-tank-06.png" alt="Heart Tank - Launch Octopus" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Launch Octopus</div>
+                </div>
+                <div class="tile" data-flag="htBoomerKuwanger">
+                    <img src="heart-tank-07.png" alt="Heart Tank - Boomer Kuwanger" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Boomer Kuwanger</div>
+                </div>
+                <div class="tile" data-flag="htStingChameleon">
+                    <img src="heart-tank-08.png" alt="Heart Tank - Sting Chameleon" onerror="this.style.display='none'">
+                    <div class="tile-label">HT - Sting Chameleon</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sub-Tanks Section -->
+        <div class="section">
+            <h2 class="section-title">Sub-Tanks Collected</h2>
+            <div class="tiles-grid sub-tanks-grid">
+                <div class="tile" data-flag="stArmoredArmadillo">
+                    <img src="sub-tank-01.png" alt="Sub-Tank - Armored Armadillo" onerror="this.style.display='none'">
+                    <div class="tile-label">ST - Armored Armadillo</div>
+                </div>
+                <div class="tile" data-flag="stFlameMammoth">
+                    <img src="sub-tank-02.png" alt="Sub-Tank - Flame Mammoth" onerror="this.style.display='none'">
+                    <div class="tile-label">ST - Flame Mammoth</div>
+                </div>
+                <div class="tile" data-flag="stSparkMandrill">
+                    <img src="sub-tank-03.png" alt="Sub-Tank - Spark Mandrill" onerror="this.style.display='none'">
+                    <div class="tile-label">ST - Spark Mandrill</div>
+                </div>
+                <div class="tile" data-flag="stStormEagle">
+                    <img src="sub-tank-04.png" alt="Sub-Tank - Storm Eagle" onerror="this.style.display='none'">
+                    <div class="tile-label">ST - Storm Eagle</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- X Upgrades Section -->
+        <div class="section">
+            <h2 class="section-title">X Upgrades</h2>
+            <div class="tiles-grid upgrades-grid">
+                <div class="tile" data-flag="boots">
+                    <img src="boots.png" alt="Boots" onerror="this.style.display='none'">
+                    <div class="tile-label">Boots (Legs)</div>
+                </div>
+                <div class="tile" data-flag="helmet">
+                    <img src="helmet.png" alt="Helmet" onerror="this.style.display='none'">
+                    <div class="tile-label">Helmet (Head)</div>
+                </div>
+                <div class="tile" data-flag="megaBuster">
+                    <img src="buster.png" alt="Mega Buster" onerror="this.style.display='none'">
+                    <div class="tile-label">Mega Buster (Arms)</div>
+                </div>
+                <div class="tile" data-flag="bodyArmor">
+                    <img src="body-armor.png" alt="Body Armor" onerror="this.style.display='none'">
+                    <div class="tile-label">Body Armor</div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Password Display Section -->
+        <div class="password-section">
+            <h2 class="password-title">Password</h2>
+            <div class="password-grid" id="passwordGrid">
+                <!-- 12 digits will be inserted here (4x3 grid) -->
+                <div class="password-digit">1</div>
+                <div class="password-digit">7</div>
+                <div class="password-digit">6</div>
+                <div class="password-digit">4</div>
+                <div class="password-digit">1</div>
+                <div class="password-digit">4</div>
+                <div class="password-digit">8</div>
+                <div class="password-digit">8</div>
+                <div class="password-digit">7</div>
+                <div class="password-digit">7</div>
+                <div class="password-digit">4</div>
+                <div class="password-digit">8</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Mega Man X Password Generator - Password Set #1
+         * Based on: https://gamefaqs.gamespot.com/snes/588479-mega-man-x/faqs/52749
+         * 
+         * The password system uses 24 binary flags to represent game progress.
+         * Each of the 12 password positions is calculated using:
+         * 1. X and Y "altering factors" to select a number pair
+         * 2. Main factors counted to determine if even (first number) or odd (second number)
+         */
+
+        // Initialize all 24 flags to false
+        const flags = {
+            // 8 Mavericks
+            chillPenguin: false,
+            stormEagle: false,
+            flameMammoth: false,
+            sparkMandrill: false,
+            armoredArmadillo: false,
+            launchOctopus: false,
+            boomerKuwanger: false,
+            stingChameleon: false,
+            
+            // 8 Heart Tanks
+            htChillPenguin: false,
+            htStormEagle: false,
+            htFlameMammoth: false,
+            htSparkMandrill: false,
+            htArmoredArmadillo: false,
+            htLaunchOctopus: false,
+            htBoomerKuwanger: false,
+            htStingChameleon: false,
+            
+            // 4 Sub-Tanks
+            stArmoredArmadillo: false,
+            stFlameMammoth: false,
+            stSparkMandrill: false,
+            stStormEagle: false,
+            
+            // 4 Armor Upgrades
+            boots: false,
+            helmet: false,
+            megaBuster: false,
+            bodyArmor: false
+        };
+
+        /**
+         * Password Set #1 Position Specifications
+         * Each position has:
+         * - Number pairs for different X/Y factor combinations
+         * - X and Y factors (altering factors)
+         * - Main factors (used for even/odd counting)
+         */
+        const passwordSpec = [
+            // Position (1,1) - Bottom-left
+            {
+                pairs: { N: [1, 8], X: [4, 6], Y: [3, 7], XY: [2, 5] },
+                xFactor: 'htArmoredArmadillo',
+                yFactor: 'boots',
+                mainFactors: ['armoredArmadillo', 'boomerKuwanger', 'htBoomerKuwanger', 
+                              'htChillPenguin', 'htFlameMammoth', 'htLaunchOctopus', 
+                              'htStingChameleon', 'stSparkMandrill', 'bodyArmor']
+            },
+            // Position (2,1)
+            {
+                pairs: { N: [8], X: [3], Y: [2], XY: [1] },
+                xFactor: 'stingChameleon',
+                yFactor: 'stStormEagle',
+                mainFactors: []
+            },
+            // Position (3,1)
+            {
+                pairs: { N: [2, 6], X: [8, 7], Y: [5, 3], XY: [4, 1] },
+                xFactor: 'htLaunchOctopus',
+                yFactor: 'stSparkMandrill',
+                mainFactors: ['armoredArmadillo', 'boomerKuwanger', 'chillPenguin',
+                              'flameMammoth', 'launchOctopus', 'sparkMandrill',
+                              'stingChameleon', 'stormEagle']
+            },
+            // Position (4,1)
+            {
+                pairs: { N: [1], X: [4], Y: [6], XY: [8] },
+                xFactor: 'chillPenguin',
+                yFactor: 'htSparkMandrill',
+                mainFactors: []
+            },
+            // Position (1,2) - Middle-left
+            {
+                pairs: { N: [5, 7], X: [3, 2], Y: [1, 8], XY: [6, 4] },
+                xFactor: 'launchOctopus',
+                yFactor: 'bodyArmor',
+                mainFactors: ['armoredArmadillo', 'boomerKuwanger', 'chillPenguin',
+                              'flameMammoth', 'stormEagle', 'htArmoredArmadillo',
+                              'htBoomerKuwanger', 'stArmoredArmadillo', 'megaBuster']
+            },
+            // Position (2,2)
+            {
+                pairs: { N: [8, 2], X: [4, 7], Y: [1, 3], XY: [6, 5] },
+                xFactor: 'boomerKuwanger',
+                yFactor: 'htBoomerKuwanger',
+                mainFactors: ['stArmoredArmadillo', 'stFlameMammoth', 'stSparkMandrill',
+                              'stStormEagle', 'boots', 'helmet', 'bodyArmor', 'megaBuster']
+            },
+            // Position (3,2)
+            {
+                pairs: { N: [5, 4], X: [8, 1], Y: [3, 7], XY: [6, 2] },
+                xFactor: 'armoredArmadillo',
+                yFactor: 'megaBuster',
+                mainFactors: ['launchOctopus', 'stormEagle', 'htChillPenguin',
+                              'htFlameMammoth', 'stStormEagle', 'helmet']
+            },
+            // Position (4,2)
+            {
+                pairs: { N: [2], X: [6], Y: [8], XY: [7] },
+                xFactor: 'sparkMandrill',
+                yFactor: 'htStingChameleon',
+                mainFactors: []
+            },
+            // Position (1,3) - Top-left
+            {
+                pairs: { N: [4, 1], X: [2, 7], Y: [6, 5], XY: [8, 3] },
+                xFactor: 'htChillPenguin',
+                yFactor: 'stArmoredArmadillo',
+                mainFactors: ['chillPenguin', 'flameMammoth', 'htLaunchOctopus',
+                              'htStingChameleon', 'stSparkMandrill', 'stStormEagle',
+                              'helmet', 'bodyArmor', 'megaBuster']
+            },
+            // Position (2,3)
+            {
+                pairs: { N: [3, 2], X: [7, 8], Y: [4, 1], XY: [6, 5] },
+                xFactor: 'flameMammoth',
+                yFactor: 'helmet',
+                mainFactors: ['htArmoredArmadillo', 'htBoomerKuwanger', 'htChillPenguin',
+                              'htFlameMammoth', 'htLaunchOctopus', 'htSparkMandrill',
+                              'htStingChameleon', 'htStormEagle']
+            },
+            // Position (3,3)
+            {
+                pairs: { N: [2], X: [4], Y: [6], XY: [7] },
+                xFactor: 'htFlameMammoth',
+                yFactor: 'stFlameMammoth',
+                mainFactors: []
+            },
+            // Position (4,3) - Top-right
+            {
+                pairs: { N: [5], X: [3], Y: [2], XY: [6] },
+                xFactor: 'stormEagle',
+                yFactor: 'htStormEagle',
+                mainFactors: []
+            }
+        ];
+
+        /**
+         * Calculate the password based on current flag states
+         * @returns {Array<number>} Array of 12 digits
+         */
+        function calculatePassword() {
+            const password = [];
+
+            for (let i = 0; i < 12; i++) {
+                const spec = passwordSpec[i];
+                
+                // Determine which number pair to use based on X and Y factors
+                const xTrue = flags[spec.xFactor];
+                const yTrue = flags[spec.yFactor];
+                
+                let pair;
+                if (!xTrue && !yTrue) {
+                    pair = spec.pairs.N;
+                } else if (xTrue && !yTrue) {
+                    pair = spec.pairs.X;
+                } else if (!xTrue && yTrue) {
+                    pair = spec.pairs.Y;
+                } else {
+                    pair = spec.pairs.XY;
+                }
+
+                // Count how many main factors are true
+                let mainCount = 0;
+                for (const factor of spec.mainFactors) {
+                    if (flags[factor]) {
+                        mainCount++;
+                    }
+                }
+
+                // Select digit: even count = first number, odd count = second number
+                const digit = (mainCount % 2 === 0) ? pair[0] : (pair[1] || pair[0]);
+                password.push(digit);
+            }
+
+            return password;
+        }
+
+        /**
+         * Update the password display grid with new digits
+         * @param {Array<number>} password - Array of 12 digits
+         */
+        function updatePasswordDisplay(password) {
+            const digitElements = document.querySelectorAll('.password-digit');
+            password.forEach((digit, index) => {
+                if (digitElements[index]) {
+                    digitElements[index].textContent = digit;
+                    // Add a brief animation effect
+                    digitElements[index].style.animation = 'none';
+                    setTimeout(() => {
+                        digitElements[index].style.animation = 'pulse 0.3s ease';
+                    }, 10);
+                }
+            });
+        }
+
+        /**
+         * Handle tile click events - toggle flag and update password
+         * @param {Event} event - Click event
+         */
+        function handleTileClick(event) {
+            const tile = event.currentTarget;
+            const flagName = tile.dataset.flag;
+            
+            if (!flagName || !(flagName in flags)) {
+                return;
+            }
+
+            // Toggle flag state
+            flags[flagName] = !flags[flagName];
+            
+            // Update tile visual state
+            tile.classList.toggle('selected', flags[flagName]);
+            
+            // Recalculate and update password
+            const newPassword = calculatePassword();
+            updatePasswordDisplay(newPassword);
+        }
+
+        /**
+         * Initialize the application
+         */
+        function init() {
+            // Add click listeners to all tiles
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach(tile => {
+                tile.addEventListener('click', handleTileClick);
+            });
+
+            // Calculate and display initial password (all flags false)
+            const initialPassword = calculatePassword();
+            updatePasswordDisplay(initialPassword);
+
+            // Add CSS animation for digit changes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0%, 100% { transform: scale(1); }
+                    50% { transform: scale(1.1); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
