@@ -293,18 +293,19 @@
             <h2 class="password-title">Password</h2>
             <div class="password-grid" id="passwordGrid">
                 <!-- 12 digits will be inserted here (4x3 grid) -->
+                <!-- Base password (all flags false): 1768-5858-3884 -->
                 <div class="password-digit">1</div>
                 <div class="password-digit">7</div>
                 <div class="password-digit">6</div>
-                <div class="password-digit">4</div>
-                <div class="password-digit">1</div>
-                <div class="password-digit">4</div>
+                <div class="password-digit">8</div>
+                <div class="password-digit">5</div>
+                <div class="password-digit">8</div>
+                <div class="password-digit">5</div>
+                <div class="password-digit">8</div>
+                <div class="password-digit">3</div>
                 <div class="password-digit">8</div>
                 <div class="password-digit">8</div>
-                <div class="password-digit">7</div>
-                <div class="password-digit">7</div>
                 <div class="password-digit">4</div>
-                <div class="password-digit">8</div>
             </div>
         </div>
     </div>
@@ -312,12 +313,13 @@
     <script>
         /**
          * Mega Man X Password Generator - Password Set #1
-         * Based on: https://gamefaqs.gamespot.com/snes/588479-mega-man-x/faqs/52749
+         * Based on: https://www.mmhp.net/Passwords/PassCrackX1.html
          * 
          * The password system uses 24 binary flags to represent game progress.
-         * Each of the 12 password positions is calculated using:
-         * 1. X and Y "altering factors" to select a number pair
-         * 2. Main factors counted to determine if even (first number) or odd (second number)
+         * Base password (all flags false): 1768-5858-3884
+         * 
+         * Each of the 12 squares has specific conditional logic based on item combinations.
+         * The algorithm uses groupings and odd/even counting for certain squares.
          */
 
         // Initialize all 24 flags to false
@@ -356,147 +358,301 @@
         };
 
         /**
-         * Password Set #1 Position Specifications
-         * Each position has:
-         * - Number pairs for different X/Y factor combinations
-         * - X and Y factors (altering factors)
-         * - Main factors (used for even/odd counting)
-         */
-        const passwordSpec = [
-            // Position (1,1) - Bottom-left
-            {
-                pairs: { N: [1, 8], X: [4, 6], Y: [3, 7], XY: [2, 5] },
-                xFactor: 'htArmoredArmadillo',
-                yFactor: 'boots',
-                mainFactors: ['armoredArmadillo', 'boomerKuwanger', 'htBoomerKuwanger', 
-                              'htChillPenguin', 'htFlameMammoth', 'htLaunchOctopus', 
-                              'htStingChameleon', 'stSparkMandrill', 'bodyArmor']
-            },
-            // Position (2,1)
-            {
-                pairs: { N: [8], X: [3], Y: [2], XY: [1] },
-                xFactor: 'stingChameleon',
-                yFactor: 'stStormEagle',
-                mainFactors: []
-            },
-            // Position (3,1)
-            {
-                pairs: { N: [2, 6], X: [8, 7], Y: [5, 3], XY: [4, 1] },
-                xFactor: 'htLaunchOctopus',
-                yFactor: 'stSparkMandrill',
-                mainFactors: ['armoredArmadillo', 'boomerKuwanger', 'chillPenguin',
-                              'flameMammoth', 'launchOctopus', 'sparkMandrill',
-                              'stingChameleon', 'stormEagle']
-            },
-            // Position (4,1)
-            {
-                pairs: { N: [1], X: [4], Y: [6], XY: [8] },
-                xFactor: 'chillPenguin',
-                yFactor: 'htSparkMandrill',
-                mainFactors: []
-            },
-            // Position (1,2) - Middle-left
-            {
-                pairs: { N: [5, 7], X: [3, 2], Y: [1, 8], XY: [6, 4] },
-                xFactor: 'launchOctopus',
-                yFactor: 'bodyArmor',
-                mainFactors: ['armoredArmadillo', 'boomerKuwanger', 'chillPenguin',
-                              'flameMammoth', 'stormEagle', 'htArmoredArmadillo',
-                              'htBoomerKuwanger', 'stArmoredArmadillo', 'megaBuster']
-            },
-            // Position (2,2)
-            {
-                pairs: { N: [8, 2], X: [4, 7], Y: [1, 3], XY: [6, 5] },
-                xFactor: 'boomerKuwanger',
-                yFactor: 'htBoomerKuwanger',
-                mainFactors: ['stArmoredArmadillo', 'stFlameMammoth', 'stSparkMandrill',
-                              'stStormEagle', 'boots', 'helmet', 'bodyArmor', 'megaBuster']
-            },
-            // Position (3,2)
-            {
-                pairs: { N: [5, 4], X: [8, 1], Y: [3, 7], XY: [6, 2] },
-                xFactor: 'armoredArmadillo',
-                yFactor: 'megaBuster',
-                mainFactors: ['launchOctopus', 'stormEagle', 'htChillPenguin',
-                              'htFlameMammoth', 'stStormEagle', 'helmet']
-            },
-            // Position (4,2)
-            {
-                pairs: { N: [2], X: [6], Y: [8], XY: [7] },
-                xFactor: 'sparkMandrill',
-                yFactor: 'htStingChameleon',
-                mainFactors: []
-            },
-            // Position (1,3) - Top-left
-            {
-                pairs: { N: [4, 1], X: [2, 7], Y: [6, 5], XY: [8, 3] },
-                xFactor: 'htChillPenguin',
-                yFactor: 'stArmoredArmadillo',
-                mainFactors: ['chillPenguin', 'flameMammoth', 'htLaunchOctopus',
-                              'htStingChameleon', 'stSparkMandrill', 'stStormEagle',
-                              'helmet', 'bodyArmor', 'megaBuster']
-            },
-            // Position (2,3)
-            {
-                pairs: { N: [3, 2], X: [7, 8], Y: [4, 1], XY: [6, 5] },
-                xFactor: 'flameMammoth',
-                yFactor: 'helmet',
-                mainFactors: ['htArmoredArmadillo', 'htBoomerKuwanger', 'htChillPenguin',
-                              'htFlameMammoth', 'htLaunchOctopus', 'htSparkMandrill',
-                              'htStingChameleon', 'htStormEagle']
-            },
-            // Position (3,3)
-            {
-                pairs: { N: [2], X: [4], Y: [6], XY: [7] },
-                xFactor: 'htFlameMammoth',
-                yFactor: 'stFlameMammoth',
-                mainFactors: []
-            },
-            // Position (4,3) - Top-right
-            {
-                pairs: { N: [5], X: [3], Y: [2], XY: [6] },
-                xFactor: 'stormEagle',
-                yFactor: 'htStormEagle',
-                mainFactors: []
-            }
-        ];
-
-        /**
          * Calculate the password based on current flag states
+         * Implementation based on MMHP Password Crack documentation
          * @returns {Array<number>} Array of 12 digits
          */
         function calculatePassword() {
             const password = [];
 
-            for (let i = 0; i < 12; i++) {
-                const spec = passwordSpec[i];
-                
-                // Determine which number pair to use based on X and Y factors
-                const xTrue = flags[spec.xFactor];
-                const yTrue = flags[spec.yFactor];
-                
-                let pair;
-                if (!xTrue && !yTrue) {
-                    pair = spec.pairs.N;
-                } else if (xTrue && !yTrue) {
-                    pair = spec.pairs.X;
-                } else if (!xTrue && yTrue) {
-                    pair = spec.pairs.Y;
-                } else {
-                    pair = spec.pairs.XY;
-                }
+            // Helper functions to count items
+            const countHearts = () => {
+                let count = 0;
+                if (flags.htChillPenguin) count++;
+                if (flags.htStormEagle) count++;
+                if (flags.htFlameMammoth) count++;
+                if (flags.htSparkMandrill) count++;
+                if (flags.htArmoredArmadillo) count++;
+                if (flags.htLaunchOctopus) count++;
+                if (flags.htBoomerKuwanger) count++;
+                if (flags.htStingChameleon) count++;
+                return count;
+            };
 
-                // Count how many main factors are true
-                let mainCount = 0;
-                for (const factor of spec.mainFactors) {
-                    if (flags[factor]) {
-                        mainCount++;
-                    }
-                }
+            const countBosses = () => {
+                let count = 0;
+                if (flags.chillPenguin) count++;
+                if (flags.stormEagle) count++;
+                if (flags.flameMammoth) count++;
+                if (flags.sparkMandrill) count++;
+                if (flags.armoredArmadillo) count++;
+                if (flags.launchOctopus) count++;
+                if (flags.boomerKuwanger) count++;
+                if (flags.stingChameleon) count++;
+                return count;
+            };
 
-                // Select digit: even count = first number, odd count = second number
-                const digit = (mainCount % 2 === 0) ? pair[0] : (pair[1] || pair[0]);
-                password.push(digit);
+            const countCapsulesAndSubtanks = () => {
+                let count = 0;
+                if (flags.boots) count++;
+                if (flags.helmet) count++;
+                if (flags.megaBuster) count++;
+                if (flags.bodyArmor) count++;
+                if (flags.stArmoredArmadillo) count++;
+                if (flags.stFlameMammoth) count++;
+                if (flags.stSparkMandrill) count++;
+                if (flags.stStormEagle) count++;
+                return count;
+            };
+
+            // Group counting functions
+            const countGroup1 = () => {
+                let count = 0;
+                if (flags.flameMammoth) count++;
+                if (flags.chillPenguin) count++;
+                if (flags.htLaunchOctopus) count++;
+                if (flags.htStingChameleon) count++;
+                if (flags.stStormEagle) count++;
+                if (flags.stSparkMandrill) count++;
+                if (flags.megaBuster) count++;
+                if (flags.bodyArmor) count++;
+                if (flags.helmet) count++;
+                return count;
+            };
+
+            const countGroup2 = () => {
+                let count = 0;
+                if (flags.armoredArmadillo) count++;
+                if (flags.flameMammoth) count++;
+                if (flags.stormEagle) count++;
+                if (flags.boomerKuwanger) count++;
+                if (flags.chillPenguin) count++;
+                if (flags.htArmoredArmadillo) count++;
+                if (flags.htBoomerKuwanger) count++;
+                if (flags.stArmoredArmadillo) count++;
+                if (flags.megaBuster) count++;
+                return count;
+            };
+
+            const countGroup3 = () => {
+                let count = 0;
+                if (flags.launchOctopus) count++;
+                if (flags.stormEagle) count++;
+                if (flags.htFlameMammoth) count++;
+                if (flags.htChillPenguin) count++;
+                if (flags.stStormEagle) count++;
+                if (flags.helmet) count++;
+                return count;
+            };
+
+            const countGroup4 = () => {
+                let count = 0;
+                if (flags.armoredArmadillo) count++;
+                if (flags.boomerKuwanger) count++;
+                if (flags.htLaunchOctopus) count++;
+                if (flags.htStingChameleon) count++;
+                if (flags.htFlameMammoth) count++;
+                if (flags.htBoomerKuwanger) count++;
+                if (flags.htChillPenguin) count++;
+                if (flags.bodyArmor) count++;
+                if (flags.stSparkMandrill) count++;
+                return count;
+            };
+
+            // 1st square: AA Subtank, CP Heart, Group1
+            const aaSubtank = flags.stArmoredArmadillo;
+            const cpHeart = flags.htChillPenguin;
+            const group1 = countGroup1();
+            if (aaSubtank && cpHeart && group1 > 0 && group1 % 2 === 0) {
+                password.push(8);
+            } else if (aaSubtank && cpHeart) {
+                password.push(3);
+            } else if (cpHeart && group1 > 0 && group1 % 2 === 0) {
+                password.push(2);
+            } else if (cpHeart) {
+                password.push(7);
+            } else if (aaSubtank && group1 > 0 && group1 % 2 === 0) {
+                password.push(6);
+            } else if (aaSubtank) {
+                password.push(5);
+            } else if (group1 > 0 && group1 % 2 === 0) {
+                password.push(4);
+            } else {
+                password.push(1);
+            }
+
+            // 2nd square: Mammoth, Helmet, Hearts (odd/even)
+            const hearts = countHearts();
+            const heartsOdd = hearts % 2 === 1;
+            if (flags.flameMammoth && flags.helmet && heartsOdd) {
+                password.push(1);
+            } else if (flags.flameMammoth && heartsOdd) {
+                password.push(2);
+            } else if (flags.flameMammoth && !heartsOdd) {
+                password.push(3);
+            } else if (flags.flameMammoth && flags.helmet && !heartsOdd) {
+                password.push(4);
+            } else if (flags.helmet && heartsOdd) {
+                password.push(5);
+            } else if (flags.helmet && !heartsOdd) {
+                password.push(6);
+            } else if (!heartsOdd) {
+                password.push(7);
+            } else {
+                password.push(8);
+            }
+
+            // 3rd square: FM Subtank, FM Heart
+            if (flags.stFlameMammoth && !flags.htFlameMammoth) {
+                password.push(2);
+            } else if (flags.stFlameMammoth && flags.htFlameMammoth) {
+                password.push(4);
+            } else if (!flags.stFlameMammoth && flags.htFlameMammoth) {
+                password.push(7);
+            } else {
+                password.push(6);
+            }
+
+            // 4th square: Eagle, SE Heart
+            if (flags.stormEagle && !flags.htStormEagle) {
+                password.push(1);
+            } else if (!flags.stormEagle && flags.htStormEagle) {
+                password.push(4);
+            } else if (flags.stormEagle && flags.htStormEagle) {
+                password.push(7);
+            } else {
+                password.push(8);
+            }
+
+            // 5th square: Octopus, Armor, Group2
+            const group2 = countGroup2();
+            if (flags.launchOctopus && flags.bodyArmor && group2 > 0 && group2 % 2 === 0) {
+                password.push(4);
+            } else if (flags.launchOctopus && group2 > 0 && group2 % 2 === 1) {
+                password.push(2);
+            } else if (flags.launchOctopus && !flags.bodyArmor) {
+                password.push(3);
+            } else if (flags.bodyArmor && group2 > 0 && group2 % 2 === 0) {
+                password.push(8);
+            } else if (flags.bodyArmor) {
+                password.push(1);
+            } else if (group2 > 0 && group2 % 2 === 0) {
+                password.push(7);
+            } else {
+                password.push(5);
+            }
+
+            // 6th square: Kuwanger, BK Heart, Capsules/Subtanks (odd/even)
+            const capsAndSubs = countCapsulesAndSubtanks();
+            const capsAndSubsEven = capsAndSubs % 2 === 0;
+            if (flags.htBoomerKuwanger && capsAndSubsEven) {
+                password.push(1);
+            } else if (!flags.htBoomerKuwanger && !flags.boomerKuwanger && !capsAndSubsEven) {
+                password.push(2);
+            } else if (flags.htBoomerKuwanger && !capsAndSubsEven) {
+                password.push(3);
+            } else if (flags.boomerKuwanger && !flags.htBoomerKuwanger && capsAndSubsEven) {
+                password.push(4);
+            } else if (flags.boomerKuwanger && flags.htBoomerKuwanger && !capsAndSubsEven) {
+                password.push(5);
+            } else if (flags.boomerKuwanger && flags.htBoomerKuwanger && capsAndSubsEven) {
+                password.push(6);
+            } else if (flags.boomerKuwanger && !capsAndSubsEven) {
+                password.push(7);
+            } else {
+                password.push(8);
+            }
+
+            // 7th square: Armadillo, X-Buster, Group3
+            const group3 = countGroup3();
+            if (flags.armoredArmadillo && flags.megaBuster && group3 > 0 && group3 % 2 === 0) {
+                password.push(2);
+            } else if (flags.armoredArmadillo && group3 > 0 && group3 % 2 === 1) {
+                password.push(1);
+            } else if (flags.armoredArmadillo && !flags.megaBuster) {
+                password.push(8);
+            } else if (flags.megaBuster && group3 > 0 && group3 % 2 === 0) {
+                password.push(7);
+            } else if (flags.megaBuster) {
+                password.push(3);
+            } else if (group3 > 0 && group3 % 2 === 0) {
+                password.push(4);
+            } else {
+                password.push(5);
+            }
+
+            // 8th square: Mandrill, SC Heart
+            if (flags.htStingChameleon && !flags.sparkMandrill) {
+                password.push(2);
+            } else if (flags.sparkMandrill && flags.htStingChameleon) {
+                password.push(6);
+            } else if (flags.sparkMandrill && !flags.htStingChameleon) {
+                password.push(7);
+            } else {
+                password.push(8);
+            }
+
+            // 9th square: Leg/Boots, AA Heart, Group4
+            const group4 = countGroup4();
+            if (flags.boots && flags.htArmoredArmadillo && group4 > 0 && group4 % 2 === 0) {
+                password.push(6);
+            } else if (flags.htArmoredArmadillo && group4 > 0 && group4 % 2 === 1) {
+                password.push(5);
+            } else if (flags.boots && !flags.htArmoredArmadillo && group4 > 0 && group4 % 2 === 0) {
+                password.push(8);
+            } else if (flags.boots && flags.htArmoredArmadillo) {
+                password.push(4);
+            } else if (flags.htArmoredArmadillo) {
+                password.push(2);
+            } else if (flags.boots) {
+                password.push(1);
+            } else if (group4 > 0 && group4 % 2 === 0) {
+                password.push(7);
+            } else {
+                password.push(3);
+            }
+
+            // 10th square: Chameleon, SE Subtank
+            if (flags.stingChameleon && flags.stStormEagle) {
+                password.push(1);
+            } else if (flags.stStormEagle && !flags.stingChameleon) {
+                password.push(2);
+            } else if (flags.stingChameleon && !flags.stStormEagle) {
+                password.push(3);
+            } else {
+                password.push(8);
+            }
+
+            // 11th square: SM Subtank, LO Heart, Bosses (odd/even)
+            const bosses = countBosses();
+            const bossesOdd = bosses % 2 === 1;
+            if (flags.stSparkMandrill && bossesOdd) {
+                password.push(1);
+            } else if (flags.htLaunchOctopus && !bossesOdd) {
+                password.push(2);
+            } else if (flags.htLaunchOctopus && flags.stSparkMandrill && bossesOdd) {
+                password.push(3);
+            } else if (flags.stSparkMandrill && !bossesOdd) {
+                password.push(4);
+            } else if (flags.htLaunchOctopus && flags.stSparkMandrill && !bossesOdd) {
+                password.push(5);
+            } else if (flags.htLaunchOctopus && bossesOdd) {
+                password.push(6);
+            } else if (bossesOdd) {
+                password.push(7);
+            } else {
+                password.push(8);
+            }
+
+            // 12th square: Penguin, SM Heart
+            if (flags.chillPenguin && !flags.htSparkMandrill) {
+                password.push(1);
+            } else if (!flags.chillPenguin && !flags.htSparkMandrill) {
+                password.push(4);
+            } else if (flags.chillPenguin && flags.htSparkMandrill) {
+                password.push(6);
+            } else {
+                password.push(8);
             }
 
             return password;
