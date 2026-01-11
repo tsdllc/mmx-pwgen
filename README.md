@@ -7,6 +7,7 @@ A single-file HTML application that generates valid Mega Man X (SNES) passwords 
 - **Interactive UI**: Click tiles to toggle game progress flags
 - **Real-time Password Generation**: Password updates immediately when flags change
 - **Responsive Design**: Works on desktop and mobile devices
+- **Correct Algorithm**: Implements Password Set #1 from MMHP Password Crack documentation
 - **24 Game Progress Flags**:
   - 8 Mavericks Defeated
   - 8 Heart Tanks Collected
@@ -17,12 +18,14 @@ A single-file HTML application that generates valid Mega Man X (SNES) passwords 
 
 Simply open `pwgen.html` in any modern web browser. Click on tiles to toggle them on/off, and the password will update automatically.
 
-## Implementation
+## Password System
 
-The password generator implements the Mega Man X password algorithm using:
-- Binary flags for all 24 game progress items
-- Position-based calculation with X/Y altering factors
-- Even/odd main factor counting to select password digits
+The password generator implements Password Set #1 based on the [MMHP Password Crack](https://www.mmhp.net/Passwords/PassCrackX1.html) documentation. The algorithm uses:
+
+- **Base Password** (all flags false): `1768-5858-3884`
+- Group-based item counting for conditional logic
+- Odd/even counting for hearts, bosses, and capsules/subtanks
+- 12 squares with specific conditional rules per the MMHP specification
 
 ## Password Format
 
@@ -31,13 +34,16 @@ Passwords are displayed in a 4x3 grid (12 digits total), formatted as:
 XXXX-XXXX-XXXX
 ```
 
+## Validation
+
+The base password `1768-5858-3884` has been verified against the MMHP Password Crack documentation. For complex flag combinations, cross-reference with the [MMHP Interactive Generator](https://www.mmhp.net/Passwords/MMX1/).
+
 ## Technical Notes
 
-The implementation follows the password algorithm specification with:
-- All flags initialized to `false` (skip intro state)
-- Dynamic password recalculation on flag changes
-- Visual feedback for selected/unselected states
-- Graceful handling of missing image assets
+- Single HTML file with inline CSS and JavaScript
+- No external dependencies
+- Gracefully handles missing image assets
+- Algorithm directly implements MMHP Password Set #1 specification
 
 ## License
 
